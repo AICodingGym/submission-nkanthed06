@@ -235,6 +235,9 @@ class Collector:
                         # as interactions between both features are hard to
                         # get right. This should only happen in the rare
                         # cases where .related_objects is overridden anyway.
+                        # Fetching only the referenced fields also avoids
+                        # decoding columns that deletion never reads, such as
+                        # legacy non-UTF-8 text (#30191).
                         if not (sub_objs.query.select_related or self._has_signal_listeners(related_model)):
                             sub_objs = sub_objs.only(*self._get_referenced_fields(related_model))
                         if sub_objs:
